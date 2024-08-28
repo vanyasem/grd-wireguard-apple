@@ -192,11 +192,16 @@ extension TunnelConfiguration {
             var dnsServers = [DNSServer]()
             var dnsSearch = [String]()
             for dnsServerString in dnsString.splitToArray(trimmingCharacters: .whitespacesAndNewlines) {
-                if let dnsServer = DNSServer(from: dnsServerString) {
-                    dnsServers.append(dnsServer)
-                } else {
-                    dnsSearch.append(dnsServerString)
-                }
+				if dnsServerString.contains("https://") {
+					interface.dnsHTTPSURL = URL(string: dnsServerString)
+					
+				} else {
+					if let dnsServer = DNSServer(from: dnsServerString) {
+						dnsServers.append(dnsServer)
+					} else {
+						dnsSearch.append(dnsServerString)
+					}
+				}
             }
             interface.dns = dnsServers
             interface.dnsSearch = dnsSearch
